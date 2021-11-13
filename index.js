@@ -39,13 +39,13 @@ async function run() {
         app.post('/products', async (req, res) => {
             const product = req.body;
             const result = await productsCollectionWithUserInfo.insertOne(product)
-            console.log(result);
+            // console.log(result);
             res.json(result)
         })
         app.post('/addproducts', async (req, res) => {
             const product = req.body;
             const result = await productsCollection.insertOne(product)
-            console.log(result);
+            // console.log(result);
             res.json(result)
         })
         app.delete('/productswithuserinfo/:id', async (req, res) => {
@@ -66,6 +66,16 @@ async function run() {
             const products = await cursor.toArray();
             res.send(products)
         })
+
+        //status update
+        app.put('/productswithusers', async (req, res) => {
+            const status = req.body;
+            filter = { email: status.email, _id: status._id }
+            const updateDoc = { $set: { status: 'shipped' } }
+            const result = await productsCollectionWithUserInfo.updateOne(filter, updateDoc)
+            res.json(result)
+        })
+
         app.delete('/productswithusers/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: (id.toString()) }
@@ -74,7 +84,7 @@ async function run() {
         })
         app.post('/reviews', async (req, res) => {
             const review = req.body;
-            console.log(review);
+            // console.log(review);
             const result = await reviewCollection.insertOne(review)
             // console.log(product);
             res.json(result)
@@ -89,26 +99,26 @@ async function run() {
             const user = req.body;
             console.log(user);
             const result = await usersCollection.insertOne(user)
-            console.log(result);
+            // console.log(result);
             res.json(result)
         })
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
-            const query={email:email}
+            const query = { email: email }
             const result = await usersCollection.findOne(query)
-            let isAdmin=false
-            console.log(result);
-            if(result?.role==='admin')
-            {
-                isAdmin=true
+            let isAdmin = false
+            // console.log(result);
+            if (result?.role === 'admin') {
+                isAdmin = true
             }
-            res.json({admin:isAdmin})
+            // console.log(isAdmin);
+            res.json({ admin: isAdmin })
         })
         app.put('/users', async (req, res) => {
             const user = req.body;
-            filter={email:user.email}
-            const updateDoc={$set:{role:'admin'}}
-            const result = await usersCollection.updateOne(filter,updateDoc)
+            filter = { email: user.email }
+            const updateDoc = { $set: { role: 'admin' } }
+            const result = await usersCollection.updateOne(filter, updateDoc)
             res.json(result)
         })
         app.delete('/products/:id', async (req, res) => {
