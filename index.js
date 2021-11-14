@@ -44,8 +44,9 @@ async function run() {
         })
         app.post('/addproducts', async (req, res) => {
             const product = req.body;
+            // console.log(product)
             const result = await productsCollection.insertOne(product)
-            // console.log(result);
+            console.log(result);
             res.json(result)
         })
         app.delete('/productswithuserinfo/:id', async (req, res) => {
